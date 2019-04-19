@@ -13,15 +13,18 @@ import matplotlib
 matplotlib.use('Agg') # for saving plot to file
 from matplotlib import pyplot
 import numpy
+import cv2
+from buildNetwork import loadData
 
 def main( argv ):
 	# load model from file
 	model = keras.models.load_model( "./mnistModel.h5" )
 	weights = model.layers[0].get_weights()[0] # index 0 for weights, 1 for bias
 	
-	print("Loaded in model")
+	print("Loaded in model...")
 	print("weights dims:", weights.shape)
 	
+	# print out weights
 	for i in range(weights.shape[3]):
 		print("filter", i)
 		for x in range(weights.shape[0]):
@@ -31,8 +34,8 @@ def main( argv ):
 			print(line)
 		print()
 	
-	#fig, axs = pyplot.subplots( 4, 8, figsize=(5, 5) )
-	fig = pyplot.figure()
+	# display weights as color-coded grids
+	pyplot.figure()
 	
 	#----- adapted from: https://stackoverflow.com/questions/49775515/visualise-filters-in-keras-cnn
 	# normalize these filters first, otherwise they won't be in a suitable range for plotting:
@@ -63,10 +66,26 @@ def main( argv ):
 		pyplot.imshow( redBlueGrid )
 	#-----------------------------------------------------------------------------------------------
 	
-	input()
-	pyplot.savefig( "testing.pdf" )
+	pyplot.savefig( "filters.pdf" )
+	print("Drew filters into PDF...")
 	
-	#axs[ 1, 1 ].hist2d( data[ 0 ], data[ 1 ] )
-
+	# load MNIST example data
+	x_train, y_train, x_test, y_test, input_shape = loadData( )
+	src = x_train[0]
+	
+	# apply filters to first training example
+	print("Displaying filtered images...")
+	filteredImgs = []
+	for filterNum in range( 32 ):
+		filter = normWeights[ :, :, 0, filterNum ]
+		dst = cv2.filter2D( src, -1, filter) # -1 to use src ddepth
+		filteredImgs.append(dst)
+		
+		cv2.imshow("filtered img {:d}".format(filterNum), dst)
+	
+	print("Press any key in image windows to close all")
+	cv2.waitKey(0)
+	cv2.destroyAllWindows()
+	
 if __name__ == "__main__":
 	main( sys.argv )
