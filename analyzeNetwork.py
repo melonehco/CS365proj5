@@ -69,13 +69,13 @@ def main( argv ):
 	
 	# load MNIST example data
 	x_train, y_train, x_test, y_test, input_shape = loadData( )
-	src = x_train[0]
+	firstImage = x_train[0]
 	
 	# apply filters to first training example
 	filteredImgs = []
 	for filterNum in range( 32 ):
 		filter = normWeights[ :, :, 0, filterNum ]
-		dst = cv2.filter2D( src, -1, filter) # -1 to use src depth
+		dst = cv2.filter2D( firstImage, -1, filter) # -1 to use src depth
 		
 		# if min val is negative, shift values to be in non-negative range
 		minVal = dst.min()
@@ -101,21 +101,34 @@ def main( argv ):
 	pyplot.savefig( "filterResults.pdf" )
 	print("Drew filtered images into PDF...")
 
-	# build a model using just first layer
-	first_layer_model = Model(inputs=model.input, outputs=model.get_layer(index=1).output)
-	srcArray = numpy.array([src])
-	predictions = first_layer_model.predict(srcArray)
-	print( predictions.shape )
-	print("-----------------")
-	print(model.get_layer(index = 1).output_shape)
+
+	srcArray = numpy.array([firstImage])
+	runPartialNetwork(model, srcArray, "oneLayerResults.pdf", 1)
+	runPartialNetwork(model, srcArray, "twoLayerResults.pdf", 2)
+	runPartialNetwork(model, srcArray, "threeLayerResults.pdf", 3)
+
+	altSrcArray1 = numpy.array([x_train[1]])
+	runPartialNetwork(model, altSrcArray1, "poolingAlt1.pdf", 3)
+	altSrcArray2 = numpy.array([x_train[2]])
+	runPartialNetwork(model, altSrcArray2, "poolingAlt2.pdf", 3)
+	altSrcArray3 = numpy.array([x_train[3]])
+	runPartialNetwork(model, altSrcArray3, "poolingAlt3.pdf", 3)
+
+
+# Takes in one or more images to run through layers of a given network and saves to a PDF.
+# The default number of layers is 1.
+def runPartialNetwork(model, imageInput, filename, layersUpTo = 1):
+	partialModel = Model(inputs=model.input, outputs=model.get_layer(index=layersUpTo).output)
+	predictions = partialModel.predict(imageInput)
 
 	pyplot.figure()
-	for filterNum in range( 32 ):
-		pyplot.subplot(8, 4, filterNum+1)
-		pyplot.imshow( predictions[0,:,:,filterNum] )
+	for filterNum in range(32):
+		pyplot.subplot(8, 4, filterNum + 1)
+		pyplot.imshow(predictions[0, :, :, filterNum])
 
-	pyplot.savefig( "oneLayerResults.pdf" )
-	print("Drew filtered images into PDF...")
+	pyplot.savefig(filename)
+	print("Drew partial network output into a PDF...")
+
 
 if __name__ == "__main__":
 	main( sys.argv )
