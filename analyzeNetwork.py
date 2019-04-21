@@ -54,9 +54,6 @@ def main( argv ):
 		imageRed[ imageRed < 0 ] = 0
 		imageBlue[ imageBlue > 0 ] = 0
 		
-		# print( imageRed )
-		# print( imageBlue )
-		
 		redBlueGrid = numpy.zeros( (filter.shape[ 0 ], filter.shape[ 1 ], 3) ) # 3x3, 3 color channels
 		redBlueGrid[ :, :, 0 ] = imageRed
 		redBlueGrid[ :, :, 2 ] = -imageBlue
@@ -74,18 +71,33 @@ def main( argv ):
 	src = x_train[0]
 	
 	# apply filters to first training example
-	print("Displaying filtered images...")
 	filteredImgs = []
 	for filterNum in range( 32 ):
 		filter = normWeights[ :, :, 0, filterNum ]
 		dst = cv2.filter2D( src, -1, filter) # -1 to use src ddepth
-		filteredImgs.append(dst)
 		
-		cv2.imshow("filtered img {:d}".format(filterNum), dst)
+		# if min val is negative, shift values to be in non-negative range
+		minVal = dst.min()
+		if minVal < 0:
+			dst = dst + -minVal
+			maxVal = dst.max()
+			dst = dst * 255.0 / maxVal
+				
+		filteredWColor = numpy.zeros( (dst.shape[ 0 ], dst.shape[ 1 ], 3) )  # img rows x cols, 3 color channels
+		filteredWColor[ :, :, 0 ] = dst # red
+		filteredWColor[ :, :, 1 ] = dst # green
+		filteredWColor[ :, :, 2 ] = 255.0 - dst # blue
+		
+		filteredWColor = filteredWColor.astype("uint8")
+
+		filteredImgs.append(filteredWColor)
 	
-	print("Press any key in image windows to close all")
-	cv2.waitKey(0)
-	cv2.destroyAllWindows()
-	
+	pyplot.figure()
+	for filterNum in range( 32 ):
+		pyplot.subplot(8, 4, filterNum+1)
+		pyplot.imshow( filteredImgs[filterNum] )
+	pyplot.savefig( "filterResults.pdf" )
+	print("Drew filtered images into PDF...")
+
 if __name__ == "__main__":
 	main( sys.argv )
