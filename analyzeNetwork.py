@@ -101,7 +101,7 @@ def main( argv ):
 	pyplot.savefig( "filterResults.pdf" )
 	print("Drew filtered images into PDF...")
 
-
+	# run partial versions of network on different input images
 	srcArray = numpy.array([firstImage])
 	runPartialNetwork(model, srcArray, "oneLayerResults.pdf", 1)
 	runPartialNetwork(model, srcArray, "twoLayerResults.pdf", 2)
