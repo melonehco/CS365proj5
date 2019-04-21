@@ -15,6 +15,7 @@ from matplotlib import pyplot
 import numpy
 import cv2
 from buildNetwork import loadData
+from keras.models import Model
 
 def main( argv ):
 	# load model from file
@@ -74,7 +75,7 @@ def main( argv ):
 	filteredImgs = []
 	for filterNum in range( 32 ):
 		filter = normWeights[ :, :, 0, filterNum ]
-		dst = cv2.filter2D( src, -1, filter) # -1 to use src ddepth
+		dst = cv2.filter2D( src, -1, filter) # -1 to use src depth
 		
 		# if min val is negative, shift values to be in non-negative range
 		minVal = dst.min()
@@ -96,7 +97,24 @@ def main( argv ):
 	for filterNum in range( 32 ):
 		pyplot.subplot(8, 4, filterNum+1)
 		pyplot.imshow( filteredImgs[filterNum] )
+
 	pyplot.savefig( "filterResults.pdf" )
+	print("Drew filtered images into PDF...")
+
+	# build a model using just first layer
+	first_layer_model = Model(inputs=model.input, outputs=model.get_layer(index=1).output)
+	srcArray = numpy.array([src])
+	predictions = first_layer_model.predict(srcArray)
+	print( predictions.shape )
+	print("-----------------")
+	print(model.get_layer(index = 1).output_shape)
+
+	pyplot.figure()
+	for filterNum in range( 32 ):
+		pyplot.subplot(8, 4, filterNum+1)
+		pyplot.imshow( predictions[0,:,:,filterNum] )
+
+	pyplot.savefig( "oneLayerResults.pdf" )
 	print("Drew filtered images into PDF...")
 
 if __name__ == "__main__":
