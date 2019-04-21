@@ -1,0 +1,2 @@
+- reorganize analyzeNetwork into functions
+- use weights instead of normWeights for displaying filtered image?
