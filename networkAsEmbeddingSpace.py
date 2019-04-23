@@ -19,13 +19,20 @@ def writeOutLetterData(dirName):
 	labels = []
 	for name in filenames:
 		labels.append( name.split('_')[0] )
-		
+	
+	# turn category data into numbers for each category
 	unique, mapping = numpy.unique( numpy.array( labels ), return_inverse=True )
 	
-	# write data out to file
+	# combine image data into 1 np array (# images x 784)
+	data = numpy.zeros((len(filenames), 784))
 	# use flatten method to flatten each (image) np array to 1d
-	# combine them into 1 np array (# images x 784)
-	# then use numpy.savetxt, passing in a header row, to write out to file
+	for imgNum in range(letterImages.shape[0]):
+		data[imgNum] = letterImages[imgNum].flatten()
+	# write data out to file
+	numpy.savetxt("letterData.csv", data, delimiter=",", header="this is a header?")
+	
+	# write category data out to file
+	numpy.savetxt( "letterCats.csv", mapping, delimiter=",", header="true category" )
 	
 def main(argv):
 	if len(argv) < 2:
