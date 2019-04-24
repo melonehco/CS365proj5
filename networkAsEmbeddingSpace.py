@@ -123,6 +123,51 @@ def main(argv):
 	testLetterVectors = truncatedModel.predict( testLetterData ) # a array w/ a 128-elem vector for each letter example
 	
 	
+	# section of trying this network on our own handwritten input
+	print("---------------------------------------------------------------------------------------------------")
+	
+	alpha1SSDs = "alphas: "
+	alpha2SSDs = "alphas: "
+	beta1SSDs = "alphas: "
+	beta2SSDs = "alphas: "
+	gamma1SSDs = "alphas: "
+	gamma2SSDs = "alphas: "
+	for i in range( numExamples ):
+		alpha1SSDs += " " + str( numpy.sum( numpy.square( (testLetterVectors[ 0, : ] - letterVectors[ i, : ]) ) ) )  # 0 for first alpha
+		alpha2SSDs += " " + str( numpy.sum( numpy.square( (testLetterVectors[ 1, : ] - letterVectors[ i, : ]) ) ) )  # 0 for first alpha
+		beta1SSDs += " " + str( numpy.sum( numpy.square( (testLetterVectors[ 2, : ] - letterVectors[ i, : ]) ) ) )  # 9 for first beta
+		beta2SSDs += " " + str( numpy.sum( numpy.square( (testLetterVectors[ 3, : ] - letterVectors[ i, : ]) ) ) )  # 9 for first beta
+		gamma1SSDs += " " + str( numpy.sum( numpy.square( (testLetterVectors[ 4, : ] - letterVectors[ i, : ]) ) ) )  # 18 for first gamma
+		gamma2SSDs += " " + str( numpy.sum( numpy.square( (testLetterVectors[ 5, : ] - letterVectors[ i, : ]) ) ) )  # 18 for first gamma
+
+		if i == 8:
+			alpha1SSDs += "\nbetas:"
+			alpha2SSDs += "\nbetas:"
+			beta1SSDs += "\nbetas:"
+			beta2SSDs += "\nbetas:"
+			gamma1SSDs += "\nbetas:"
+			gamma2SSDs += "\nbetas:"
+		elif i == 17:
+			alpha1SSDs += "\ngammas:"
+			alpha2SSDs += "\ngammas:"
+			beta1SSDs += "\ngammas:"
+			beta2SSDs += "\ngammas:"
+			gamma1SSDs += "\ngammas:"
+			gamma2SSDs += "\ngammas:"
+
+	print( "SSDs of first alpha" )
+	print( alpha1SSDs, "\n" )
+	print( "SSDs of second alpha" )
+	print( alpha2SSDs, "\n" )
+	print( "SSDs of first beta" )
+	print( beta1SSDs, "\n" )
+	print( "SSDs of second beta" )
+	print( beta2SSDs, "\n" )
+	print( "SSDs of first gamma" )
+	print( gamma1SSDs )
+	print( "SSDs of second gamma" )
+	print( gamma2SSDs )
+	
 
 if __name__ == "__main__":
 	main( sys.argv )
