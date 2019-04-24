@@ -99,9 +99,9 @@ def main(argv):
 	betaSSDs = "alphas: "
 	gammaSSDs = "alphas: "
 	for i in range(numExamples):
-		alphaSSDs += " " + str(numpy.sum((letterVectors[0,:]-letterVectors[i,:]))**2) # 0 for first alpha
-		betaSSDs += " " + str(numpy.sum((letterVectors[9,:]-letterVectors[i,:]))**2) # 9 for first beta
-		gammaSSDs += " " + str(numpy.sum((letterVectors[18,:]-letterVectors[i,:]))**2) # 18 for first gamma
+		alphaSSDs += " " + str( numpy.sum(numpy.square((letterVectors[0,:]-letterVectors[i,:]))) ) # 0 for first alpha
+		betaSSDs += " " + str( numpy.sum(numpy.square((letterVectors[9,:]-letterVectors[i,:]))) ) # 9 for first beta
+		gammaSSDs += " " + str( numpy.sum(numpy.square((letterVectors[18,:]-letterVectors[i,:]))) ) # 18 for first gamma
 		
 		if i == 8:
 			alphaSSDs += "\nbetas:"
