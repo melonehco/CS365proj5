@@ -23,7 +23,7 @@ and writes the category data (as number categories) into another CSV file
 '''
 def writeOutLetterData(dirName):
 	letterImages, filenames = readInImagesFromDir(dirName, 28, 28)
-		
+			
 	# determine correct categories from filenames
 	labels = []
 	for name in filenames:
@@ -118,7 +118,11 @@ def main(argv):
 	print(betaSSDs, "\n")
 	print("SSDs of first gamma")
 	print(gammaSSDs)
-		
+	
+	testLetterData, testLetterCats = readInLetterData( "testLetterData.csv", "testLetterCats.csv" )
+	testLetterVectors = truncatedModel.predict( testLetterData ) # a array w/ a 128-elem vector for each letter example
+	
+	
 
 if __name__ == "__main__":
 	main( sys.argv )
