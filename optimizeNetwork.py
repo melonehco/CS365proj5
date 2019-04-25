@@ -60,11 +60,13 @@ def tryNetworkVariation(data, convFilterDim, dropRate1, dropRate2, numEpochs):
 def main():
 	num_classes = 10  # 10 digits
 	
-	data = loadData( )
+	x_train, y_train, x_test, y_test, input_shape = loadData( )
 	
 	# convert class vectors to binary class matrices
-	data[1] = keras.utils.to_categorical( data[1], num_classes ) # y train
-	data[3] = keras.utils.to_categorical( data[3], num_classes ) # y test
+	y_train = keras.utils.to_categorical( y_train, num_classes )
+	y_test = keras.utils.to_categorical( y_test, num_classes )
+	
+	data = (x_train, y_train, x_test, y_test, input_shape)
 	
 	convFilterOptions = [1, 2, 3, 4]
 	dropRateOptions = [(0.15, 0.4), (0.25, 0.5), (0.35, 0.6), (0.5, 0.25)]
@@ -74,10 +76,13 @@ def main():
 	numEpochsIDX = 0 # index of current optimal value
 	
 	for i in range(5): # optimize all three parameters 5 times
+		print("-------------------- Optimization run", i, "--------------------")
+		
 		# optimize convolution filter size
 		maxAccuracy = 0.0 # best accuracy value seen so far
 		optimalIDX = convFilterIDX # index of best parameter value used so far
 		for paramIDX in range(4):
+			print("-----> Optimizing convolution filter size, iteration", paramIDX)
 			score = tryNetworkVariation(data, convFilterOptions[paramIDX], dropRateOptions[dropRateIDX][0],
 										dropRateOptions[dropRateIDX][1], numEpochsOptions[numEpochsIDX])
 			if score[1] > maxAccuracy:
@@ -89,6 +94,7 @@ def main():
 		maxAccuracy = 0.0 # best accuracy value seen so far
 		optimalIDX = dropRateIDX # index of best parameter value used so far
 		for paramIDX in range(4):
+			print( "-----> Optimizing dropout rates, iteration", paramIDX )
 			score = tryNetworkVariation(data, convFilterOptions[convFilterIDX], dropRateOptions[paramIDX][0],
 										dropRateOptions[paramIDX][1], numEpochsOptions[numEpochsIDX])
 			if score[1] > maxAccuracy:
@@ -100,12 +106,17 @@ def main():
 		maxAccuracy = 0.0 # best accuracy value seen so far
 		optimalIDX = numEpochsIDX # index of best parameter value used so far
 		for paramIDX in range(4):
+			print("-----> Optimizing number of epochs, iteration", paramIDX)
 			score = tryNetworkVariation(data, convFilterOptions[convFilterIDX], dropRateOptions[dropRateIDX][0],
 										dropRateOptions[dropRateIDX][1], numEpochsOptions[paramIDX])
 			if score[1] > maxAccuracy:
 				maxAccuracy = score[1]
 				optimalIDX = paramIDX
 		numEpochsIDX = optimalIDX
+		
+		print( "Now using parameter values: conv filter size =", convFilterOptions[ convFilterIDX ],
+			   "dropout rates =", dropRateOptions[ dropRateIDX ], "number of epochs =",
+			   numEpochsOptions[ numEpochsIDX ] )
 	
 	print("Optimal parameter values: conv filter size =", convFilterOptions[convFilterIDX],
 		  "dropout rates =", dropRateOptions[dropRateIDX], "number of epochs =", numEpochsOptions[numEpochsIDX])
