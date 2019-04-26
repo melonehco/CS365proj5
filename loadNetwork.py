@@ -62,9 +62,7 @@ def main(argv):
 	
 	# input image dimensions
 	img_rows, img_cols = 28, 28
-	
-	#x_test = None
-	#y_test = None
+
 	if len(argv) > 1:  # if a data source folder was provided
 		x_test, filenames = readInImagesFromDir(argv[1], img_rows, img_cols, True)
 		y_test = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]

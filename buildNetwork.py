@@ -9,7 +9,6 @@ Project 5
 """
 
 import numpy
-import cv2
 import keras
 from keras.datasets import mnist
 from keras.models import Sequential
@@ -18,7 +17,6 @@ from keras.layers import Conv2D, MaxPooling2D
 from keras import backend as K
 
 def loadData():
-	num_classes = 10 # 10 digits
 	# input image dimensions
 	img_rows, img_cols = 28, 28
 	
