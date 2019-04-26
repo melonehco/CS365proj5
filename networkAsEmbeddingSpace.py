@@ -38,10 +38,10 @@ def writeOutLetterData(dirName):
 	for imgNum in range(letterImages.shape[0]):
 		data[imgNum] = letterImages[imgNum].flatten()
 	# write data out to file
-	numpy.savetxt("letterData.csv", data, delimiter=",", header="this is a header?")
+	numpy.savetxt("csvs/letterData.csv", data, delimiter=",", header="image data flattened into rows")
 	
 	# write category data out to file
-	numpy.savetxt( "letterCats.csv", mapping, delimiter=",", header="true category" )
+	numpy.savetxt( "csvs/letterCats.csv", mapping, delimiter=",", header="true category" )
 
 '''
 reads in a letter image data CSV file and a category data CSV file
@@ -70,14 +70,14 @@ def main(argv):
 		print("Please give an image directory name.")
 		exit()
 	
-	# writeOutLetterData(argv[1])
-	# print("Wrote out letter data CSV files...")
-	
 	# load model from file
 	model = keras.models.load_model( "./mnistModel.h5" )
 	truncatedModel = Model( inputs=model.input, outputs=model.get_layer( index=6 ).output )
 	
 	print( "Loaded in model..." )
+	
+	writeOutLetterData(argv[1])
+	print("Wrote out letter data CSV files...")
 	
 	# load MNIST example data
 	x_train, y_train, x_test, y_test, input_shape = loadData( )
@@ -90,9 +90,9 @@ def main(argv):
 	print("Dense layer output shape: ", predictions.shape)
 	
 	# apply the truncated network to the greek symbols (read from the CSV file)
-	letterData, letterCats = readInLetterData("letterData.csv", "letterCats.csv")
+	letterData, letterCats = readInLetterData("csvs/letterData.csv", "csvs/letterCats.csv")
 	numExamples = letterData.shape[0]
-	letterVectors = truncatedModel.predict( letterData ) # a array w/ a 128-elem vector for each letter example
+	letterVectors = truncatedModel.predict( letterData ) # an array w/ a 128-elem vector for each letter example
 			
 	# calculate SSD between first alpha example vector and each other example vector
 	alphaSSDs = "alphas: "
@@ -119,12 +119,12 @@ def main(argv):
 	print("SSDs of first gamma")
 	print(gammaSSDs)
 	
-	testLetterData, testLetterCats = readInLetterData( "testLetterData.csv", "testLetterCats.csv" )
-	testLetterVectors = truncatedModel.predict( testLetterData ) # a array w/ a 128-elem vector for each letter example
+	testLetterData, testLetterCats = readInLetterData( "csvs/testLetterData.csv", "csvs/testLetterCats.csv" )
+	testLetterVectors = truncatedModel.predict( testLetterData ) # an array w/ a 128-elem vector for each letter example
 	
 	
 	# section of trying this network on our own handwritten input
-	print("---------------------------------------------------------------------------------------------------")
+	print("----------------------------------------------------------------------")
 	
 	alpha1SSDs = "alphas: "
 	alpha2SSDs = "alphas: "

@@ -69,7 +69,7 @@ def tryNetworkVariation(data, convFilterDim, dropRate1, dropRate2, numEpochs):
 	return score
 
 def writeTimesToCSV():
-	numpy.savetxt("TrainingTimerResults.csv", times, delimiter=",", header="training epoch times")
+	numpy.savetxt("csvs/TrainingTimerResults.csv", times, delimiter=",", header="training epoch times")
 
 def main():
 	num_classes = 10  # 10 digits
@@ -140,21 +140,5 @@ def main():
 
 	writeTimesToCSV()
 
-
-	'''
-	//have 4 options per parameter
-
-	//2 dropout layers, currently rates are 0.25 and 0.5
-	
-	//options: 0.25 & 0.5, 0.5 & 0.25, 0.15 & 0.4, 0.35 & 0.6
-	
-	//2 conv layers, currently filters are 3x3
-	
-	//options: 1x1, 2x2, 3x3, 4x4
-	
-	//currently 12 epochs
-	
-	//options: 8, 10, 12, 14
-	'''
 if __name__ == "__main__":
 	main()
