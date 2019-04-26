@@ -114,12 +114,15 @@ def main():
 				optimalIDX = paramIDX
 		numEpochsIDX = optimalIDX
 		
-		print( "Now using parameter values: conv filter size =", convFilterOptions[ convFilterIDX ],
-			   "dropout rates =", dropRateOptions[ dropRateIDX ], "number of epochs =",
-			   numEpochsOptions[ numEpochsIDX ] )
+		print("Now using parameter values:")
+		print("    conv filter size =", convFilterOptions[ convFilterIDX ])
+		print("    dropout rates =", dropRateOptions[ dropRateIDX ])
+		print("    number of epochs =", numEpochsOptions[ numEpochsIDX ])
 	
-	print("Optimal parameter values: conv filter size =", convFilterOptions[convFilterIDX],
-		  "dropout rates =", dropRateOptions[dropRateIDX], "number of epochs =", numEpochsOptions[numEpochsIDX])
+	print("Optimal parameter values:")
+	print("    conv filter size =", convFilterOptions[ convFilterIDX ])
+	print("    dropout rates =", dropRateOptions[ dropRateIDX ])
+	print("    number of epochs =", numEpochsOptions[ numEpochsIDX ])
 	
 	'''
 	//have 4 options per parameter
