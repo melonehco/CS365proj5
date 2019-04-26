@@ -1,6 +1,6 @@
 """
-gaborNetwork.py
-creates a network with Gabor filters for its first layer, held constant
+analyzePretrainedNetwork.py
+downloads a pre-trained network from Keras and analyzes its first couple of layers
 
 Zena Abulhab and Melody Mao
 CS365 Spring 2019
