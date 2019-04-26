@@ -13,19 +13,18 @@ import keras
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
-from keras import backend as K
 from buildNetwork import loadData
 
 '''
 returns a set of Gabor filters to use in a convolutional layer
 '''
-def getGaborFilters(shape):#, dtype):
+def getGaborFilters(shape):
 	kernels = []
 	kernel_size = (shape[0], shape[1])
 	
 	sigmaVals = [4.0, 6.0] # standard deviation of Gaussian
 	thetaVals = [0.0, numpy.pi * 0.25, numpy.pi * 0.5, numpy.pi * 0.75] # orientation
-	lambdaVals = [2.0, 3.0, 4.0, 5.0] # wavelength
+	lambdaVals = [2.0, 3.0, 4.0, 5.0] # wavelength: ≥ 2 (always), ≤ 5 (based on our input size)
 	gammaVal = 0.5 # aspect ratio
 	
 	for sigVal in sigmaVals:
@@ -33,11 +32,6 @@ def getGaborFilters(shape):#, dtype):
 			for lamVal in lambdaVals:
 				# cv2.getGaborKernel( ksize, sigma, theta, lambd, gamma, psi, data type )
 				kernels.append( cv2.getGaborKernel( kernel_size, sigVal, thVal, lamVal, gammaVal, 0, ktype=cv2.CV_32F ) )
-		
-	# sigma (standard deviation) = 4, 6
-	# theta (orientation) = 0, pi/4, pi/2, 3 pi/4
-	# lambda (wavelength) ≥ 2 (always), ≤ 5 (based on our input size), = 2, 3, 4, 5
-	# gamma (aspect ratio) 0.5
 	
 	kernel_array = numpy.array(kernels) # shape (32, 7, 7)
 	
@@ -61,7 +55,7 @@ def main():
 	
 	# init model and build up stack of layers
 	model = Sequential( )
-	model.add( Conv2D( 32, kernel_size=(7, 7),
+	model.add( Conv2D( 32, kernel_size=(5, 5),
 					   activation='relu',
 					   input_shape=input_shape,
 					   kernel_initializer=getGaborFilters, trainable=False) ) # use Gabor filters and don't train this layer
