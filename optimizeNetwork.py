@@ -9,10 +9,8 @@ CS365 Spring 2019
 Project 5
 """
 
-import sys
 import numpy
 import keras
-from keras import Model
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
@@ -23,7 +21,7 @@ import KerasTimer
 timerCallback = KerasTimer.KerasTimer()
 
 # Global training time list.
-# appended to after each training session, and saved to csv when all are complete
+# Appended to after each training session, and saved to csv when all are complete
 times = []
 
 '''

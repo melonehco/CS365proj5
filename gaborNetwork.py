@@ -74,7 +74,7 @@ def main():
 				   optimizer=keras.optimizers.Adam( ),
 				   metrics=[ 'accuracy' ] )
 	
-	# train model for given # epochs
+	# train model for given # of epochs
 	model.fit( x_train, y_train,
 			   batch_size=batch_size,
 			   epochs=epochs,
