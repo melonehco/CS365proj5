@@ -17,6 +17,14 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from buildNetwork import loadData
+import KerasTimer
+
+# global timer callback variable
+timerCallback = KerasTimer.KerasTimer()
+
+# Global training time list.
+# appended to after each training session, and saved to csv when all are complete
+times = []
 
 '''
 tests a network variation with the given convolution filter size,
@@ -51,11 +59,17 @@ def tryNetworkVariation(data, convFilterDim, dropRate1, dropRate2, numEpochs):
 	model.fit( x_train, y_train,
 			   batch_size=batch_size,
 			   epochs=numEpochs,
+			   callbacks=[timerCallback],
 			   verbose=1,
 			   validation_data=(x_test, y_test) )
 	score = model.evaluate( x_test, y_test, verbose=0 )
+
+	times.append(timerCallback.times)
 	
 	return score
+
+def writeTimesToCSV():
+	numpy.savetxt("TrainingTimerResults.csv", times, delimiter=",", header="training epoch times")
 
 def main():
 	num_classes = 10  # 10 digits
@@ -65,7 +79,7 @@ def main():
 	# convert class vectors to binary class matrices
 	y_train = keras.utils.to_categorical( y_train, num_classes )
 	y_test = keras.utils.to_categorical( y_test, num_classes )
-	
+
 	data = (x_train, y_train, x_test, y_test, input_shape)
 	
 	convFilterOptions = [1, 2, 3, 4]
@@ -74,10 +88,10 @@ def main():
 	convFilterIDX = 0 # index of current optimal value
 	dropRateIDX = 0 # index of current optimal value
 	numEpochsIDX = 0 # index of current optimal value
-	
+
 	for i in range(5): # optimize all three parameters 5 times
 		print("-------------------- Optimization run", i, "--------------------")
-		
+
 		# optimize convolution filter size
 		maxAccuracy = 0.0 # best accuracy value seen so far
 		optimalIDX = convFilterIDX # index of best parameter value used so far
@@ -113,14 +127,16 @@ def main():
 				maxAccuracy = score[1]
 				optimalIDX = paramIDX
 		numEpochsIDX = optimalIDX
-		
+
 		print( "Now using parameter values: conv filter size =", convFilterOptions[ convFilterIDX ],
 			   "dropout rates =", dropRateOptions[ dropRateIDX ], "number of epochs =",
 			   numEpochsOptions[ numEpochsIDX ] )
-	
+
 	print("Optimal parameter values: conv filter size =", convFilterOptions[convFilterIDX],
 		  "dropout rates =", dropRateOptions[dropRateIDX], "number of epochs =", numEpochsOptions[numEpochsIDX])
-	
+
+	writeTimesToCSV()
+
 	'''
 	//have 4 options per parameter
 
