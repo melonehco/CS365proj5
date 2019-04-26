@@ -89,11 +89,11 @@ def applyFiltersToImage(filters, image):
 
 # Takes in one or more images to run through layers of a given network and saves to a PDF.
 # The default number of layers is 1.
-def runPartialNetwork(model, imageInput, filename, layersUpTo = 1):
+def runPartialNetwork(model, imageInput, filename, layersUpTo = 1, figsize = None):
 	partialModel = Model(inputs=model.input, outputs=model.get_layer(index=layersUpTo).output)
 	predictions = partialModel.predict(imageInput)
 
-	pyplot.figure()
+	pyplot.figure(figsize=figsize)
 	numFilters = predictions.shape[3]
 	plotCols = 4
 	plotRows = numFilters / plotCols

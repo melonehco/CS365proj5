@@ -19,41 +19,30 @@ from analyzeNetwork import runPartialNetwork
 '''
 visualizes the given filters and saves the result to a PDF
 '''
-def visualize3ChannelFilters(weights):
+def visualize3ChannelFilters(filters):
 	# display weights as color-coded grids
-	pyplot.figure( )
+	pyplot.figure(figsize=(8, 11))
 	
-	# ----- adapted from: https://stackoverflow.com/questions/49775515/visualise-filters-in-keras-cnn
-	# normalize these filters first, otherwise they won't be in a suitable range for plotting:
-	maxVal = weights.max( )
-	minVal = weights.min( )
-	absMax = max( abs( minVal ), abs( maxVal ) )
+	weights = numpy.array(filters) # make a copy to avoid changing the original
+	minVal = weights.min()
 	
-	normWeights = (weights / absMax) * 255
+	# normalize values for display
+	if minVal < 0:
+		weights = weights + -minVal
+	maxVal = weights.max()
+	weights = weights * 255.0 / maxVal
 	
 	numFilters = weights.shape[3]
 	plotRows = numFilters / 4
 	plotCols = 4
 	for filterNum in range(numFilters):
-		filter = normWeights[ :, :, 0, filterNum ]
-		
-		# a trick to see negatives as blue and positives as red
-		imageRed = numpy.array( filter )
-		imageBlue = numpy.array( filter )
-		imageRed[ imageRed < 0 ] = 0
-		imageBlue[ imageBlue > 0 ] = 0
-		
-		redBlueGrid = numpy.zeros( (filter.shape[ 0 ], filter.shape[ 1 ], 3) )  # 3x3, 3 color channels
-		redBlueGrid[ :, :, 0 ] = imageRed
-		redBlueGrid[ :, :, 2 ] = -imageBlue
-		
 		# plot image here
 		pyplot.subplot( plotRows, plotCols, filterNum + 1 )
-		pyplot.imshow( redBlueGrid )
+		pyplot.imshow( weights[:, :, :, filterNum] )
 	# -----------------------------------------------------------------------------------------------
 	
 	pyplot.savefig( "pdfs/filtersVGG16.pdf" )
-	print( "Drew filters into PDF..." )
+	print( "Drew pre-trained filters into PDF..." )
 
 def main():
 	model = VGG16( weights='imagenet', include_top=False )
@@ -63,15 +52,16 @@ def main():
 	model.summary()
 	print( "first layer weights dims:", weights.shape )
 	
+	visualize3ChannelFilters(weights)
+	
 	img_path = 'images/ruby.JPG'
 	img = image.load_img( img_path, target_size=(224, 224) )
 	img_data = image.img_to_array( img )
 	img_data = numpy.expand_dims( img_data, axis=0 )
 	img_data = preprocess_input( img_data )
 	
-	runPartialNetwork( model, img_data, "pdfs/vgg16layer1.pdf", 1 )
-	runPartialNetwork( model, img_data, "pdfs/vgg16layer2.pdf", 2 )
-	runPartialNetwork( model, img_data, "pdfs/vgg16layer3.pdf", 3 )
+	runPartialNetwork( model, img_data, "pdfs/vgg16layer1.pdf", 1, figsize=(8, 11) )
+	runPartialNetwork( model, img_data, "pdfs/vgg16layer2.pdf", 2, figsize=(8, 11) )
 
 if __name__ == "__main__":
 	main()
