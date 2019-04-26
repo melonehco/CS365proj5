@@ -65,7 +65,7 @@ def tryNetworkVariation(data, convFilterDim, dropRate1, dropRate2, numEpochs):
 	score = model.evaluate( x_test, y_test, verbose=0 )
 
 	times.append(timerCallback.times)
-	
+
 	return score
 
 def writeTimesToCSV():
@@ -128,14 +128,18 @@ def main():
 				optimalIDX = paramIDX
 		numEpochsIDX = optimalIDX
 
-		print( "Now using parameter values: conv filter size =", convFilterOptions[ convFilterIDX ],
-			   "dropout rates =", dropRateOptions[ dropRateIDX ], "number of epochs =",
-			   numEpochsOptions[ numEpochsIDX ] )
+		print("Now using parameter values:")
+		print("    conv filter size =", convFilterOptions[ convFilterIDX ])
+		print("    dropout rates =", dropRateOptions[ dropRateIDX ])
+		print("    number of epochs =", numEpochsOptions[ numEpochsIDX ])
 
-	print("Optimal parameter values: conv filter size =", convFilterOptions[convFilterIDX],
-		  "dropout rates =", dropRateOptions[dropRateIDX], "number of epochs =", numEpochsOptions[numEpochsIDX])
+	print("Optimal parameter values:")
+	print("    conv filter size =", convFilterOptions[ convFilterIDX ])
+	print("    dropout rates =", dropRateOptions[ dropRateIDX ])
+	print("    number of epochs =", numEpochsOptions[ numEpochsIDX ])
 
 	writeTimesToCSV()
+
 
 	'''
 	//have 4 options per parameter
