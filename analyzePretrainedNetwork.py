@@ -21,7 +21,7 @@ visualizes the given filters and saves the result to a PDF
 '''
 def visualize3ChannelFilters(filters):
 	# display weights as color-coded grids
-	pyplot.figure(figsize=(8, 11))
+	pyplot.figure(figsize=(8, 11)) # figure size in inches
 	
 	weights = numpy.array(filters) # make a copy to avoid changing the original
 	minVal = weights.min()
@@ -54,14 +54,15 @@ def main():
 	
 	visualize3ChannelFilters(weights)
 	
+	# read in input image
 	img_path = 'images/ruby.JPG'
 	img = image.load_img( img_path, target_size=(224, 224) )
 	img_data = image.img_to_array( img )
 	img_data = numpy.expand_dims( img_data, axis=0 )
 	img_data = preprocess_input( img_data )
 	
-	runPartialNetwork( model, img_data, "pdfs/vgg16layer1.pdf", 1, figsize=(8, 11) )
-	runPartialNetwork( model, img_data, "pdfs/vgg16layer2.pdf", 2, figsize=(8, 11) )
+	runPartialNetwork( model, img_data, "pdfs/vgg16layer1.pdf", 1, figsize=(8, 11) ) # figure size in inches
+	runPartialNetwork( model, img_data, "pdfs/vgg16layer2.pdf", 2, figsize=(8, 11) ) # figure size in inches
 
 if __name__ == "__main__":
 	main()

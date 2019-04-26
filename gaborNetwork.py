@@ -55,7 +55,7 @@ def main():
 	
 	# init model and build up stack of layers
 	model = Sequential( )
-	model.add( Conv2D( 32, kernel_size=(5, 5),
+	model.add( Conv2D( 32, kernel_size=(7, 7),
 					   activation='relu',
 					   input_shape=input_shape,
 					   kernel_initializer=getGaborFilters, trainable=False) ) # use Gabor filters and don't train this layer
