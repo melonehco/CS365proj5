@@ -1,4 +1,3 @@
 - reorganize analyzeNetwork into functions
 - use weights instead of normWeights for displaying filtered image?
 - figure what to put for header in letterData.csv
-- code timing different network variations
